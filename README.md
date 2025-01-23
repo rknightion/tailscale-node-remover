@@ -19,4 +19,6 @@ watch kubectl -n tailscale get all
 kubectl delete ns tailscale
 
 node --env-file .env src/index.js
+docker build . -t tailscale-node-remover
+docker run -e TS_TAGS="tag:k8s, tag:k8s-operator" -e TS_TIMEOUT=60 -e TS_API_TOKEN=tskey-api-xyz tailscale-node-remover
 ```
