@@ -11,6 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       packages: read
-    container: ghcr.io/${{ github.repository }}
+    container: ghcr.io/simonhaas/tailscale-node-remover
     steps:
     - run: echo Tailnet is clean again!
