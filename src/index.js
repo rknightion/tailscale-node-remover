@@ -5,9 +5,8 @@ async function main() {
   console.log('All devices:');
   console.log(JSON.stringify(devices, null, 2));
 
-  
-  devices.forEach(async device => {
-    if (deviceShouldGetRemoved(device)) {
+  devices.devices.forEach(async device => {
+    if (shouldDeviceGetRemoved(device)) {
       console.log('Device ' + device.name + ' should get removed.');
       removeDevice(device.id);
       console.log('Device ' + device.name + ' got removed!');
@@ -34,6 +33,6 @@ function removeDevice(id) {
   })
 }
 
-function deviceShouldGetRemoved(device) {
-  return (device.tags.includes('tag:k8s') || device.tags.includes('tag:k8s-operator')) && device.lastSeen < Date.now() - 1000 * 60 * 60;
+function shouldDeviceGetRemoved(device) {
+  return process.env.TS_TAGS.split(", ").some(tag => device.tags.includes(tag)) && Date.parse(device.lastSeen) < Date.now() - 1000 * process.env.TS_TIMEOUT;
 }
