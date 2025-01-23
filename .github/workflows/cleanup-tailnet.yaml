@@ -13,4 +13,4 @@ jobs:
       packages: read
     container: ghcr.io/simonhaas/tailscale-node-remover:main
     steps:
-    - run: echo Removing orphaned nodes.
+    - run: node /app/index.js
