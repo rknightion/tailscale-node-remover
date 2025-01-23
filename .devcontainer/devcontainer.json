@@ -1,0 +1,10 @@
+{
+	"name": "tailscale node remover",
+	"image": "mcr.microsoft.com/devcontainers/typescript-node:1-22-bookworm",
+	"features": {
+		"ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
+		"ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {},
+		"ghcr.io/tailscale/codespace/tailscale": {}
+	},
+	"runArgs": ["--device=/dev/net/tun"]
+}
