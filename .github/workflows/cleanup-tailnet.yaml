@@ -11,6 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       packages: read
-    container: ghcr.io/simonhaas/tailscale-node-remover
+    container: ghcr.io/simonhaas/tailscale-node-remover:main
     steps:
-    - run: echo Tailnet is clean again!
+    - run: echo Removing orphaned nodes.
