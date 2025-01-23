@@ -9,6 +9,8 @@ on:
 jobs:
   cleanup:
     runs-on: ubuntu-latest
+    permissions:
+      packages: read
     container: ghcr.io/${{ github.repository }}
     steps:
     - run: echo Tailnet is clean again!
