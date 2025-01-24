@@ -1,7 +1,8 @@
-name: Clenup Tailnet
+name: Clenup Tailnet using the naked container
 
 on:
   workflow_dispatch:
+  repository_dispatch:
 
 jobs:
   cleanup:

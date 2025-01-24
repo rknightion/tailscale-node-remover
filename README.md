@@ -14,7 +14,8 @@ Create a [Tailscale API access token](https://login.tailscale.com/admin/settings
 name: Cleanup your tailnet
 
 on:
-    workflow_dispatch:
+  workflow_dispatch:
+  repository_dispatch:
 
 jobs:
   cleanup:
@@ -24,7 +25,13 @@ jobs:
         uses: simonhaas/tailscale-node-remover@main
         id: cleanup
         with:
-            ts_api_token: ${{ secrets.TS_API_TOKEN }}
+          ts_api_token: ${{ secrets.TS_API_TOKEN }}
+```
+
+You can trigger the workflow in github via the UI or from anywhere via the CLI:
+
+``` shell
+gh workflow run .github/workflows/tailnet-cleanup.yml
 ```
 
 ## Inspiration
