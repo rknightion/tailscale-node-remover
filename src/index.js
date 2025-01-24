@@ -1,6 +1,8 @@
 main();
 
 async function main() {
+  console.log(process.env);
+
   const devices = await (await getDevices()).json();
   console.log('All devices:');
   console.log(JSON.stringify(devices, null, 2));
@@ -9,7 +11,6 @@ async function main() {
     if (shouldDeviceGetRemoved(device)) {
       console.log('Device ' + device.name + ' should get removed.');
       removeDevice(device.id);
-      console.log('Device ' + device.name + ' got removed!');
     } else {
       console.log('Device ' + device.name + ' should NOT get removed.');
     }
@@ -34,5 +35,5 @@ function removeDevice(id) {
 }
 
 function shouldDeviceGetRemoved(device) {
-  return process.env.TS_TAGS.split(", ").some(tag => device.tags.includes(tag)) && Date.parse(device.lastSeen) < Date.now() - 1000 * process.env.TS_TIMEOUT;
+  return (typeof process.env.TS_TAGS !== 'undefined' && typeof device.tags !== 'undefined' && process.env.TS_TAGS.split(", ").some(tag => device.tags.includes(tag))) && Date.parse(device.lastSeen) < Date.now() - 1000 * process.env.TS_TIMEOUT;
 }
