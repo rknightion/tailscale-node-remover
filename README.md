@@ -2,6 +2,11 @@
 
 A Github Action to remove orphaned nodes from your Tailscale tailnet.
 
+## Features
+
+- Specify a timeout after a node was last seen
+- Filter nodes by tags
+
 ## Usage
 
 Create a [Tailscale API access token](https://login.tailscale.com/admin/settings/keys) and add it to your repository's "Actions secrets and variables" as ``TS_API_TOKEN``
