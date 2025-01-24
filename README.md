@@ -31,7 +31,22 @@ jobs:
 You can trigger the workflow in github via the UI or from anywhere via the CLI:
 
 ``` shell
-gh workflow run .github/workflows/tailnet-cleanup.yml
+gh api \
+  --method POST \
+  -H "Accept: application/vnd.github+json" \
+  -H "X-GitHub-Api-Version: 2022-11-28" \
+  /repos/$GITHUB_USER/$RepositoryName/actions/workflows/tailnet-cleanup.yml/dispatches \
+   -f "ref=main"
+
+curl -L \
+  -X POST \
+  -H "Accept: application/vnd.github+json" \
+  -H "Authorization: Bearer $GH_PAT_TRIGGER_WORKFLOW_DISPATCH" \
+  -H "X-GitHub-Api-Version: 2022-11-28" \
+  https://api.github.com/repos/$GITHUB_USER/$RepositoryName/actions/workflows/tailnet-cleanup.yml/dispatches \
+  -d '{"ref":"main"}'
+
+gh workflow run tailnet-cleanup.yml # TODO could not create workflow dispatch event: HTTP 403: Resource not accessible by integration
 ```
 
 ## Inspiration
