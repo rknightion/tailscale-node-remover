@@ -1,18 +1,16 @@
 main();
 
 async function main() {
-  console.log(process.env);
-
   const devices = await (await getDevices()).json();
   console.log('All devices:');
   console.log(JSON.stringify(devices, null, 2));
 
   devices.devices.forEach(async device => {
     if (shouldDeviceGetRemoved(device)) {
-      console.log('Device ' + device.name + ' should get removed.');
+      console.log('Should get removed:    ' + device.name);
       removeDevice(device.id);
     } else {
-      console.log('Device ' + device.name + ' should NOT get removed.');
+      console.log('Should NOT get removed:' + device.name);
     }
   });
 }
