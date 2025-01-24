@@ -7,8 +7,6 @@ jobs:
   cleanup:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
       - name: Cleanup Tailnet
         uses: simonhaas/tailscale-node-remover@main
         id: cleanup
