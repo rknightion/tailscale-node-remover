@@ -4,7 +4,7 @@ A Github Action to remove orphaned nodes from your Tailscale tailnet.
 
 ## Features
 
-- Specify a timeout after a node was last seen
+- Specify a timeout in seconds after a node was last seen
 - Filter nodes by tags
 
 ## Usage
@@ -29,7 +29,9 @@ jobs:
         uses: simonhaas/tailscale-node-remover@main
         id: cleanup
         with:
-          ts_api_token: ${{ secrets.TS_API_TOKEN }}
+          ts_api_token: ${{ secrets.TS_API_TOKEN }} # required
+          ts_tags: 'tag:k8s, tag:k8s-operator'      # default
+          ts_timeout: 3600 # one hour               # default
 ```
 
 You can trigger the workflow in github via the UI or from anywhere via the CLI:
