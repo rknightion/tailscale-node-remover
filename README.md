@@ -8,6 +8,7 @@ A Github Action to remove orphaned nodes from your Tailscale tailnet.
 - Filter nodes by tags
 - Specify your tailnet, if you have multiple in one account
 - Set a different API url
+- Get the removed nodes as a github action output
 
 ## Usage
 
@@ -36,6 +37,8 @@ jobs:
           ts_timeout: 3600 # one hour                     # default
           ts_tailnet: '-' # your default tailnet          # default
           ts_api_url: 'https://api.tailscale.com/api/v2/' # default
+      - name: Get the removed nodes
+        run: echo ${{ steps.cleanup.outputs.removed_nodes }}
 ```
 
 You can trigger the workflow in github via the UI or from anywhere via the CLI:
