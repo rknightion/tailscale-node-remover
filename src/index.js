@@ -1,27 +1,24 @@
 main();
 
 async function main() {
-  const fs = require('fs');
-  fs.writeFileSync('/$GITHUB_OUTPUT', 'removed_nodes={1234}');
-  console.log(fs.readFileSync('/$GITHUB_OUTPUT', 'utf8'));
+  const devices = await (await getDevices()).json();
+  console.log('All devices:');
+  console.log(JSON.stringify(devices, null, 2));
+
+  let removedDevices = [];
+  
+  devices.devices.forEach(async device => {
+    if (shouldDeviceGetRemoved(device)) {
+      console.log('Should get removed:    ' + device.name);
+      removeDevice(device.id);
+      removedDevices.push(device);
+    } else {
+      console.log('Should NOT get removed:' + device.name);
+    }
+  });
 
   const core = require('@actions/core');
-  core.setOutput('removed_nodes', 'asdofaiosdf');
-
-  // const devices = await (await getDevices()).json();
-  // console.log('All devices:');
-  // console.log(JSON.stringify(devices, null, 2));
-
-  // let removedDevices = [];
-  // devices.devices.forEach(async device => {
-  //   if (shouldDeviceGetRemoved(device)) {
-  //     console.log('Should get removed:    ' + device.name);
-  //     removeDevice(device.id);
-  //     removedDevices.push(device);
-  //   } else {
-  //     console.log('Should NOT get removed:' + device.name);
-  //   }
-  // });
+  core.setOutput('removed_nodes', JSON.stringify(removedDevices));
 }
 
 function getDevices() {
