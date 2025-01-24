@@ -1,4 +1,4 @@
-name: Test Local Action
+name: Test Docker Action
 
 on:
     workflow_dispatch:
@@ -10,9 +10,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Cleanup Tailnet
-        uses: ./
+        uses: simonhaas/tailscale-node-remover
         id: cleanup
-        env:
-            TS_API_TOKEN: ${{ secrets.TS_API_TOKEN }}
+        with:
+            ts_api_token: ${{ secrets.TS_API_TOKEN }}
       - name: Get the output
         run: echo "OUTPUT ${{ steps.cleanup.outputs.removed_nodes }}"
