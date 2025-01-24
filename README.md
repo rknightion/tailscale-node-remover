@@ -9,7 +9,7 @@ Create a [Tailscale API access token](https://login.tailscale.com/admin/settings
 ### Github Actions
 
 ``` yaml
-# File: .github/workflows/tailnet-cleanup.yml
+# File: .github/workflows/tailnet-cleanup.yaml
 
 name: Cleanup your tailnet
 
@@ -34,7 +34,7 @@ gh api \
   --method POST \
   -H "Accept: application/vnd.github+json" \
   -H "X-GitHub-Api-Version: 2022-11-28" \
-  /repos/$GITHUB_USER/$RepositoryName/actions/workflows/tailnet-cleanup.yml/dispatches \
+  /repos/$GITHUB_USER/$RepositoryName/actions/workflows/tailnet-cleanup.yaml/dispatches \
    -f "ref=main"
 
 curl -L \
@@ -42,10 +42,10 @@ curl -L \
   -H "Accept: application/vnd.github+json" \
   -H "Authorization: Bearer $GH_PAT_TRIGGER_WORKFLOW_DISPATCH" \
   -H "X-GitHub-Api-Version: 2022-11-28" \
-  https://api.github.com/repos/$GITHUB_USER/$RepositoryName/actions/workflows/tailnet-cleanup.yml/dispatches \
+  https://api.github.com/repos/$GITHUB_USER/$RepositoryName/actions/workflows/tailnet-cleanup.yaml/dispatches \
   -d '{"ref":"main"}'
 
-gh workflow run tailnet-cleanup.yml # TODO could not create workflow dispatch event: HTTP 403: Resource not accessible by integration
+gh workflow run tailnet-cleanup.yaml # TODO could not create workflow dispatch event: HTTP 403: Resource not accessible by integration
 ```
 
 ## Inspiration
