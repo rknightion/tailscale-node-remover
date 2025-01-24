@@ -1,0 +1,14 @@
+name: Cleanup your tailnet
+
+on:
+  workflow_dispatch:
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cleanup Tailnet
+        uses: simonhaas/tailscale-node-remover@main
+        id: cleanup
+        with:
+          ts_api_token: ${{ secrets.TS_API_TOKEN }}
