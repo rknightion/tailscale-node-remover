@@ -1,6 +1,43 @@
 # tailscale-node-remover
 
-If device with tag 'tag:k8s' or 'tag:k8s-operator' was last seen more than one hour ago, remove it.
+A Github Action to remove orphaned nodes from your Tailscale tailnet.
+
+## Usage
+
+Create a [Tailscale API access token](https://login.tailscale.com/admin/settings/keys) and add it to your repository's "Actions secrets and variables" as ``TS_API_TOKEN``
+
+### Github Actions
+
+``` yaml
+# File: .github/workflows/tailnet-cleanup.yml
+
+name: Cleanup your tailnet
+
+on:
+    workflow_dispatch:
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cleanup Tailnet
+        uses: simonhaas/tailscale-node-remover@main
+        id: cleanup
+        with:
+            ts_api_token: ${{ secrets.TS_API_TOKEN }}
+```
+
+## Inspiration
+
+I use github codespaces with minikube and the tailscale operator inside to work on applications and access them through my tailnet.
+When I am done working on a feature I simply delete the codespace with the whole cluster inside.
+Leaving me with orphaned nodes in tailscale which I have to remove manually.
+
+So I wanted an automation to remove nodes with tag 'tag:k8s' or 'tag:k8s-operator' and which were last seen more than one hour ago.
+
+Hopefully my Github Action becomes obsolete soon: [FR: Support K8s Operator creating ephemeral auth keys](https://github.com/tailscale/tailscale/issues/10166)
+
+## Development
 
 ``` shell
 minikube start
