@@ -3,9 +3,6 @@ name: Clenup Tailnet
 on:
   workflow_dispatch:
 
-  # schedule:
-  #   - cron: "0 * * * *" 
-
 jobs:
   cleanup:
     runs-on: ubuntu-latest

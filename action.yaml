@@ -25,8 +25,8 @@ inputs:
     required: false
     default: 'https://api.tailscale.com/api/v2/'
 outputs:
-  removed_nodes: # TODO not jet implemented
-    description: 'JSON list of removed nodes'
+  removed_nodes:
+    description: 'Array of removed nodes'
 runs:
   using: 'docker'
   image: Dockerfile
