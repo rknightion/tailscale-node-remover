@@ -15,7 +15,6 @@ name: Cleanup your tailnet
 
 on:
   workflow_dispatch:
-  repository_dispatch:
 
 jobs:
   cleanup:
