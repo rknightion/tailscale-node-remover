@@ -17,7 +17,7 @@ async function main() {
 }
 
 function getDevices() {
-  return fetch('https://api.tailscale.com/api/v2/tailnet/-/devices', {
+  return fetch(process.env.TS_API_URL + '/tailnet/' + process.env.TS_TAILNET + '/devices', {
     headers: {
       Authorization: 'Bearer ' + process.env.TS_API_TOKEN
     }
@@ -25,7 +25,7 @@ function getDevices() {
 }
 
 function removeDevice(id) {
-  return fetch('https://api.tailscale.com/api/v2/device/' + id, {
+  return fetch(process.env.TS_API_URL + '/device/' + id, {
     method: 'DELETE',
     headers: {
       Authorization: 'Bearer ' + process.env.TS_API_TOKEN

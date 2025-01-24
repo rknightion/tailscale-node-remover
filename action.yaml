@@ -1,0 +1,38 @@
+name: 'Tailscale Node Remover'
+description: 'Remove nodes from your tailnet which the kubernetes operator has left behind.'
+author: Simon Haas <me@simonhaas.eu>
+branding:
+  icon: 'delete'
+  color: 'gray-dark'
+inputs:
+  ts_api_token:
+    description: Tailscale API access token
+    required: true
+  ts_tags:
+    description: Only remove nodes with one of these tags
+    required: false
+    default: 'tag:k8s, tag:k8s-operator'
+  ts_timeout:
+    description: Timeout in seconds after a node was last seen should be removed
+    required: false
+    default: '3600'
+  ts_tailnet:
+    description: Name of the tailnet to remove nodes from
+    required: false
+    default: '-'
+  ts_api_url:
+    description: Tailscale API URL
+    required: false
+    default: 'https://api.tailscale.com/api/v2/'
+outputs:
+  removed_nodes: # TODO not jet implemented
+    description: 'JSON list of removed nodes'
+runs:
+  using: 'docker'
+  image: Dockerfile
+  env:
+    TS_API_TOKEN: ${{ inputs.ts_api_token }}
+    TS_TAGS: ${{ inputs.ts_tags }}
+    TS_TIMEOUT: ${{ inputs.ts_timeout }}
+    TS_TAILNET: ${{ inputs.ts_tailnet }}
+    TS_API_URL: ${{ inputs.ts_api_url }}
