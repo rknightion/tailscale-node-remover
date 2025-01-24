@@ -2,8 +2,8 @@ main();
 
 async function main() {
   const fs = require('fs');
-  fs.writeFileSync('$GITHUB_OUTPUT', 'REMOVED_NODES={1234}');
-  console.log(fs.readFileSync('$GITHUB_OUTPUT', 'utf8'));
+  fs.writeFileSync('/$GITHUB_OUTPUT', 'removed_nodes={1234}');
+  console.log(fs.readFileSync('/$GITHUB_OUTPUT', 'utf8'));
 
   // const devices = await (await getDevices()).json();
   // console.log('All devices:');
