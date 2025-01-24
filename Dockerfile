@@ -1,3 +1,6 @@
 FROM node:22-alpine
-ADD src /app
-ENTRYPOINT  [ "node", "/app/index.js" ]
+WORKDIR /app
+COPY package.json package-lock.json* /
+RUN npm ci && npm cache clean --force
+ADD src .
+ENTRYPOINT  [ "node", "index.js" ]
