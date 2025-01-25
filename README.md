@@ -10,6 +10,17 @@ A script to remove orphaned nodes from your Tailscale tailnet.
 - Set a different API url
 - Get the removed nodes as a github action output
 
+The [public Tailscale API](https://tailscale.com/api#tag/devices/GET/tailnet/{tailnet}/devices) does not tell you whether or not a node is connected.
+So we have to make a guess bases on when a node was last seen.
+
+But how can it be that we can see if a node is connected or not in the admin console and in the apps?
+Well, the guys from Tailscale use a different admin API, which includes a field `connectedToControl`.
+
+- public: `https://api.tailscale.com/api/v2/tailnet/example.com/devices`
+- admin: `https://login.tailscale.com/admin/api/machines`
+
+I have not *yet* looked into how to authenticate against the admin API.
+
 ## Usage
 
 Create a [Tailscale API access token](https://login.tailscale.com/admin/settings/keys).
