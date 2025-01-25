@@ -1,6 +1,6 @@
 # tailscale-node-remover
 
-A Github Action to remove orphaned nodes from your Tailscale tailnet.
+A script to remove orphaned nodes from your Tailscale tailnet.
 
 ## Features
 
@@ -12,9 +12,18 @@ A Github Action to remove orphaned nodes from your Tailscale tailnet.
 
 ## Usage
 
-Create a [Tailscale API access token](https://login.tailscale.com/admin/settings/keys) and add it to your repository's "Actions secrets and variables" as ``TS_API_TOKEN``
+Create a [Tailscale API access token](https://login.tailscale.com/admin/settings/keys).
+
+### Docker
+
+``` shell
+export TS_API_TOKEN="tskey-api-xyz"
+docker run --rm -e TS_TAGS="tag:k8s, tag:k8s-operator" -e TS_TIMEOUT=3600 -e TS_API_TOKEN ghcr.io/simonhaas/tailscale-node-remover:main
+```
 
 ### Github Actions
+
+Add the API token to your repository's "Actions secrets and variables" as ``TS_API_TOKEN``
 
 ``` yaml
 # File: .github/workflows/tailnet-cleanup.yaml
@@ -58,9 +67,30 @@ curl -L \
   -H "X-GitHub-Api-Version: 2022-11-28" \
   https://api.github.com/repos/$GITHUB_USER/$RepositoryName/actions/workflows/tailnet-cleanup.yaml/dispatches \
   -d '{"ref":"main"}'
+```
 
+<!--
+``` shell
 gh workflow run tailnet-cleanup.yaml # TODO could not create workflow dispatch event: HTTP 403: Resource not accessible by integration
 ```
+-->
+
+### Locally using nodejs
+
+``` shell
+git clone https://github.com/SimonHaas/tailscale-node-remover.git
+cd tailscale-node-remover/src
+npm install
+node --env-file .env index.js
+```
+
+<!--
+### Remotely using nodejs
+
+``` shell
+npx run-url https://raw.githubusercontent.com/SimonHaas/tailscale-node-remover/refs/heads/main/src/index.js # TODO env variables
+```
+-->
 
 ## Inspiration
 
@@ -90,7 +120,7 @@ helm upgrade \
 watch kubectl -n tailscale get all
 kubectl delete ns tailscale
 
-node --env-file .env src/index.js
+node --env-file src/.env src/index.js
 docker build . -t tailscale-node-remover
 docker run -e TS_TAGS="tag:k8s, tag:k8s-operator" -e TS_TIMEOUT=60 -e TS_API_TOKEN=tskey-api-xyz tailscale-node-remover
 ```

@@ -3,4 +3,4 @@ WORKDIR /app
 ADD src/package.json src/package-lock.json* ./
 RUN npm ci && npm cache clean --force
 ADD src .
-ENTRYPOINT  [ "node", "/app/index.js" ]
+ENTRYPOINT  [ "node", "--env-file", "/app/.env", "/app/index.js" ]
