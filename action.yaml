@@ -28,6 +28,10 @@ inputs:
     description: Tailscale API URL
     required: false
     default: 'https://api.tailscale.com/api/v2/'
+  ts_dry_run:
+    description: 'If true, only preview deletions without actually removing nodes'
+    required: false
+    default: 'false'
 outputs:
   removed_nodes:
     description: 'Array of removed nodes'

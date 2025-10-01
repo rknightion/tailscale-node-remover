@@ -1,24 +1,74 @@
 main();
 
 async function main() {
-  const devices = await (await getDevices()).json();
-  console.log('All devices:');
-  console.log(JSON.stringify(devices, null, 2));
+  try {
+    const devicesResponse = await getDevices();
+    const devices = await devicesResponse.json();
+    console.log('All devices:');
+    console.log(JSON.stringify(devices, null, 2));
 
-  let removedDevices = [];
-  
-  devices.devices.forEach(async device => {
-    if (shouldDeviceGetRemoved(device)) {
-      console.log('Should get removed:    ' + device.name);
-      removeDevice(device.id);
-      removedDevices.push(device);
-    } else {
-      console.log('Should NOT get removed:' + device.name);
+    let removedDevices = [];
+    let totalDevices = devices.devices.length;
+    let matchedCriteria = 0;
+    let successfullyDeleted = 0;
+    let failedDeletions = 0;
+
+    // Use for...of with await instead of forEach
+    for (const device of devices.devices) {
+      if (shouldDeviceGetRemoved(device)) {
+        matchedCriteria++;
+        console.log(`Should get removed:    ${device.name} (${device.id})`);
+
+        const dryRun = process.env.TS_DRY_RUN === 'true';
+        if (dryRun) {
+          console.log(`[DRY RUN] Would delete: ${device.name}`);
+          removedDevices.push({
+            id: device.id,
+            name: device.name
+          });
+          successfullyDeleted++;
+        } else {
+          try {
+            const response = await removeDevice(device.id);
+            if (response.ok) {
+              console.log(`Successfully deleted: ${device.name}`);
+              removedDevices.push({
+                id: device.id,
+                name: device.name
+              });
+              successfullyDeleted++;
+            } else {
+              console.error(`Failed to delete ${device.name}: HTTP ${response.status}`);
+              failedDeletions++;
+            }
+          } catch (error) {
+            console.error(`Error deleting ${device.name}: ${error.message}`);
+            failedDeletions++;
+          }
+        }
+
+        // Small delay to avoid rate limiting
+        await new Promise(resolve => setTimeout(resolve, 100));
+      } else {
+        console.log(`Should NOT get removed: ${device.name}`);
+      }
     }
-  });
 
-  const core = require('@actions/core');
-  core.setOutput('removed_nodes', JSON.stringify(removedDevices));
+    // Summary
+    console.log('\n=== Summary ===');
+    console.log(`Total devices: ${totalDevices}`);
+    console.log(`Matched deletion criteria: ${matchedCriteria}`);
+    console.log(`Successfully deleted: ${successfullyDeleted}`);
+    if (failedDeletions > 0) {
+      console.log(`Failed deletions: ${failedDeletions}`);
+    }
+
+    const core = require('@actions/core');
+    core.setOutput('removed_nodes', JSON.stringify(removedDevices));
+  } catch (error) {
+    console.error('Fatal error:', error);
+    process.exit(1);
+  }
 }
 
 function getDevices() {
