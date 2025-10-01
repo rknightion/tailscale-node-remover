@@ -12,6 +12,10 @@ inputs:
     description: Only remove nodes with one of these tags
     required: false
     default: 'tag:k8s, tag:k8s-operator'
+  ts_exclude_tags:
+    description: Do not remove nodes with any of these tags
+    required: false
+    default: ''
   ts_timeout:
     description: Timeout in seconds after a node was last seen should be removed
     required: false
@@ -33,6 +37,8 @@ runs:
   env:
     TS_API_TOKEN: ${{ inputs.ts_api_token }}
     TS_TAGS: ${{ inputs.ts_tags }}
+    TS_EXCLUDE_TAGS: ${{ inputs.ts_exclude_tags }}
     TS_TIMEOUT: ${{ inputs.ts_timeout }}
     TS_TAILNET: ${{ inputs.ts_tailnet }}
     TS_API_URL: ${{ inputs.ts_api_url }}
+    TS_DRY_RUN: ${{ inputs.ts_dry_run }}
