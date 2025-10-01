@@ -5,10 +5,12 @@ A script to remove orphaned nodes from your Tailscale tailnet.
 ## Features
 
 - Specify a timeout in seconds after a node was last seen
-- Filter nodes by tags
+- Filter nodes by tags (inclusion)
+- Exclude specific tags from deletion
+- Dry-run mode to preview deletions without actually removing nodes
 - Specify your tailnet, if you have multiple in one account
 - Set a different API url
-- Get the removed nodes as a github action output
+- Get the removed nodes as a github action output with detailed information
 
 The [public Tailscale API](https://tailscale.com/api#tag/devices/GET/tailnet/{tailnet}/devices) does not tell you whether or not a node is connected.
 So we have to make a guess bases on when a node was last seen.
@@ -30,6 +32,22 @@ Create a [Tailscale API access token](https://login.tailscale.com/admin/settings
 ``` shell
 export TS_API_TOKEN="tskey-api-xyz"
 docker run --rm -e TS_TAGS="tag:k8s, tag:k8s-operator" -e TS_TIMEOUT=3600 -e TS_API_TOKEN ghcr.io/simonhaas/tailscale-node-remover:main
+
+# With exclusion tags (e.g., exclude production nodes)
+docker run --rm \
+  -e TS_TAGS="tag:k8s, tag:k8s-operator" \
+  -e TS_EXCLUDE_TAGS="tag:prod, tag:production" \
+  -e TS_TIMEOUT=3600 \
+  -e TS_API_TOKEN \
+  ghcr.io/simonhaas/tailscale-node-remover:main
+
+# Dry-run mode to preview deletions
+docker run --rm \
+  -e TS_TAGS="tag:k8s, tag:k8s-operator" \
+  -e TS_DRY_RUN=true \
+  -e TS_TIMEOUT=3600 \
+  -e TS_API_TOKEN \
+  ghcr.io/simonhaas/tailscale-node-remover:main
 ```
 
 ### Github Actions
@@ -54,12 +72,18 @@ jobs:
         with:
           ts_api_token: ${{ secrets.TS_API_TOKEN }}       # required
           ts_tags: 'tag:k8s, tag:k8s-operator'            # default
+          ts_exclude_tags: 'tag:prod, tag:production'     # optional - exclude these tags
           ts_timeout: 3600 # one hour                     # default
           ts_tailnet: '-' # your default tailnet          # default
           ts_api_url: 'https://api.tailscale.com/api/v2/' # default
+          ts_dry_run: 'false' # preview without deleting  # default
       - name: Get the removed nodes
-        run: echo ${{ steps.cleanup.outputs.removed_nodes }}
+        run: echo '${{ steps.cleanup.outputs.removed_nodes }}' | jq -r '.[] | "\(.name) (\(.id))"'
+        # Output format: JSON array of objects with 'id' and 'name' fields
+        # Alternative without jq: run: echo "Removed nodes:" && echo '${{ steps.cleanup.outputs.removed_nodes }}'
 ```
+
+The `removed_nodes` output contains a JSON array of deleted devices with `id` and `name` fields. You can use this output in subsequent steps to trigger notifications, create issues, etc.
 
 You can trigger the workflow in github via the UI or from anywhere via the CLI:
 
